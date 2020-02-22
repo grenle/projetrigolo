@@ -1,0 +1,5 @@
+# Emojoland Back TODOs
+
+## the "unique handle" check is incomplete
+- once a handle is approved, create a user with placeholder email
+- then update with actual information on signup submit

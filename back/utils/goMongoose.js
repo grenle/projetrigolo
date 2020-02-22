@@ -6,8 +6,6 @@ const log = require('./log')
 
 require('dotenv').config()
 
-console.log(`DBPORT ${process.env.DBPORT}`)
-
 const { DBPORT, MONGOHOST, DBNAME } = process.env
 // /it is connected to the file .env for security
 

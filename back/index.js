@@ -5,6 +5,11 @@ const io         = require('socket.io')(server)
 const cors       = require('cors')
 
 const word = require('./controllers/word')
+/*
+app.use('/api/signup', signupController)
+app.use('/api/login',   loginController)
+*/
+const log  = require('./utils/log')
 
 require('dotenv').config()
 const {HTTPPORT, CATCHALLIP} = process.env
@@ -24,5 +29,5 @@ app.get('/', function(req, res){
 app.use('/api/words', word)
 
 server.listen(HTTPPORT, CATCHALLIP, () => {
-  console.log(`server listening to you babble`)
+  log(`API server listening on ${HTTPPORT}`)
 })
