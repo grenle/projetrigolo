@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://fonts.googleapis.com/css?family=Mystery+Quest&display=swap" rel="stylesheet">
+    <style>
+      body{
+        max-width: 600px;
+        margin-left:  auto;
+        margin-right: auto;
+      }
+      p{
+        font-family   : monospace;
+        font-size     : 18px;
+        letter-spacing: 0.5em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style='font-family: "Mystery Quest"; letter-spacing: 0.1em;'>
+      emojiland
+    </h1>
+    <p id="revealed"></p>
+    <p id="keyboard"></p>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
+
+    <script>
+
+    window.onload = () => {
+      console.log('emojiland onload')
+      const revealed = document.getElementById('revealed')
+      const keyboard = document.getElementById('keyboard')
+      window.els = { revealed, keyboard }
+    }
+
+    socket = io.connect('http://localhost')
+
+    socket.on('connect', () => {
+      console.log('receive < connect')
+      console.log('emit    > roomRequest')
+      socket.emit('roomRequest')
+      socket.on('roomResponse', roomId => {
+        console.log(`receive < roomResponse/${roomId}`)
+        joinroom(roomId)
+      })
+    })
+
+    function joinroom(num){
+      console.log(`emit    > join/${num}`)
+      socket.emit('join', num)
+    }
+
+    function send(msg){
+      socket.emit('message', {type: 'TALK', body: msg})
+    }
+
+
+    socket.on('gameOn', () => {
+      console.log(`receive < gameOn`)
+    })
+
+
+    socket.on('gameUpdate', thing =>{
+      console.log(thing)
+      els.revealed.innerText = thing.revealed.join('')
+      els.keyboard.innerText = thing.letters.join('')
+      console.log(`receive < gameUpdate ${thing.revealed}`)
+      console.log(`receive < gameUpdate ${thing.letters}`)
+      console.log(`receive < gameUpdate ${thing.fails}`)
+    })
+
+
+    socket.on('gameEnd', thing =>{
+      console.log(`receive < gameEnd`)
+    })
+
+
+    document.addEventListener('keypress', (e) => {
+      console.log(`emit    > letter/${e.key}`)
+      socket.emit('letter', e.key)
+    })
+    </script>
+  </body>
+</html>
