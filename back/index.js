@@ -10,6 +10,7 @@ const signon = require('./controllers/signon')
 
 const log  = require('./utils/log')
 
+require('./auth/auth')
 require('dotenv').config()
 const {HTTPPORT, CATCHALLIP} = process.env
 require('./utils/goMongoose')()
