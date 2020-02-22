@@ -5,10 +5,9 @@ const io         = require('socket.io')(server)
 const cors       = require('cors')
 
 const word = require('./controllers/word')
-/*
-app.use('/api/signup', signupController)
-app.use('/api/login',   loginController)
-*/
+const signup = require('./controllers/signup')
+const signon = require('./controllers/signon')
+
 const log  = require('./utils/log')
 
 require('dotenv').config()
@@ -27,6 +26,8 @@ app.get('/', function(req, res){
 })
 
 app.use('/api/words', word)
+app.use('/api/signup', signup)
+app.use('/api/signon', signon)
 
 server.listen(HTTPPORT, CATCHALLIP, () => {
   log(`API server listening on ${HTTPPORT}`)

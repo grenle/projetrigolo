@@ -1,3 +1,9 @@
+/*
+https://www.npmjs.com/package/socket.io-rooms
+https://github.com/amkurian/simple-chat/blob/master/index.html
+https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio
+*/
+
 const {User, Rooms} = require('socket.io-rooms')
 
 const alphabet = require('../utils/alphabet')
