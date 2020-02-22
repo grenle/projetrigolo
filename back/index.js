@@ -4,6 +4,11 @@ const server     = require('http').Server(app)
 const io         = require('socket.io')(server)
 const cors       = require('cors')
 
+const word = require('./controllers/word')
+
+require('dotenv').config()
+const {HTTPPORT, CATCHALLIP} = process.env
+require('./utils/goMongoose')()
 require('./chatter/chatter')(io)
 
 app.use(cors())
@@ -16,6 +21,8 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html')
 })
 
-server.listen(80, '0.0.0.0', () => {
+app.use('/api/words', word)
+
+server.listen(HTTPPORT, CATCHALLIP, () => {
   console.log(`server listening to you babble`)
 })
