@@ -32,7 +32,7 @@ class App extends React.Component{
     return (
       <div className="container-fluid">
         <h1>Emojiland</h1>
-        {this.state.success ? <Button onClick={this.logout}>logout</Button> : null}
+        {this.state.success ? <Button className="float-right" onClick={this.logout}>logout</Button> : null}
         {this.state.success ? <Game/> : <Getin serverauth={this.serverauth}/>}
       </div>
     )
