@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Mystery+Quest&subset=latin-ext');
 
 body{
+  color: white;
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
@@ -8,4 +9,11 @@ body{
   background-repeat: no-repeat;
   background-image: url('/img/background.png');
   font-family: 'Mystery Quest';
+}
+
+h1{
+  padding-top: 10px;
+  color: darkblue;
+  text-shadow: white 0px 0px 2px, black 0px 0px 20px;
+  text-align: center;
 }
