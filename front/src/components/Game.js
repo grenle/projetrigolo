@@ -1,6 +1,8 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
+import '../utils/chatter'
+
 class Game extends React.Component{
   constructor(props){
     super(props)

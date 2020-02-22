@@ -7,7 +7,6 @@ module.exports = async function processAuth(credentials){
   //@ts-ignore
   const apihost = process.env.REACT_APP_APIHOST
   const url = `${apihost}/api/signon`
-  console.log(`processAuth`)
   console.log(`processAuth: fetch ${url}`)
   const res = await fetch(url,
     {method: 'POST',

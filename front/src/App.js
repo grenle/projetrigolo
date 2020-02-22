@@ -21,9 +21,7 @@ class App extends React.Component{
   }
   async serverauth(credentials){
     const res = await processAuth(credentials)
-    console.log(`RES: ${res}`)
     this.setState(res)
-    console.log(this.state)
   }
   logout(){
     this.setState({ success: false, data: null })
