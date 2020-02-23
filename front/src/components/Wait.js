@@ -7,7 +7,7 @@ class Wait extends React.Component{
     return(
       <div className="text-center">
         <img className="rotate" src="http://localhost/openmoji-svg-color/23F3.svg" alt='' />
-        <p>...Please Wait...</p>
+        <h2>...Please Wait...</h2>
       </div>
     )
   }

@@ -14,11 +14,13 @@ class Game extends React.Component{
   constructor(props){
     super(props)
     this.state = {
-      status: Lobby,
-      socket: openSocket('http://localhost'),
-      user: {},
-      room: undefined,
-      client: undefined,
+      status   : Lobby,
+      socket   : openSocket('http://localhost'),
+      user     : {},
+      room     : undefined,
+      client   : undefined,
+      revealed : [],
+      letters  : [],
     }
     this.playerStart = this.playerStart.bind(this)
   }
@@ -28,32 +30,61 @@ class Game extends React.Component{
   }
 
   roomRequest = () => {
-    this.state.socket.emit('roomRequest')
+    const gamer = ( ({_id, handle}) => ({_id, handle}) )(this.props.gamer)
+    console.log(`emit    > roomRequest ${gamer}`)
+    this.state.socket.emit('roomRequest', gamer)
+  }
+
+  joinroom = num => {
+    const { socket } = this.state
+    console.log(`emit    > join/${num}`)
+    socket.emit('join', num)
   }
 
   render(){
+    const { revealed, alphabet } = this.state
     return(
       <div>
         {React.createElement(
           this.state.status,
           {
             playerStart: this.playerStart,
-            roomRequest: this.roomRequest
-        }
+            roomRequest: this.roomRequest,
+            revealed,
+            alphabet
+          }
         )}
       </div>
     )
   }
 
   componentDidMount(){
+
     const {socket } = this.state
+
     socket.on('connect', () => {
       console.log('receive < connect')
-    //   console.log('emit    > roomRequest')
-    //   socket.emit('roomRequest')
       socket.on('roomResponse', roomId => {
         console.log(`receive < roomResponse/${roomId}`)
-        // joinroom(roomId)
+        this.joinroom(roomId)
+      })
+
+      socket.on('gameOn', () => {
+        console.log(`receive < gameOn`)
+        this.setState({ status: Stage })
+      })
+
+      socket.on('gameUpdate', things => {
+        console.log(`receive < gameUpdate ${things}`)
+        console.log(`                     ${things.revealed}`)
+        console.log(`                     ${things.letters}`)
+        console.log(`                     ${things.fails}`)
+        this.setState(things)
+      })
+
+      document.addEventListener('keypress', e => {
+        console.log(`emit    < letter ${e.key}`)
+        socket.emit('letter', e.key)
       })
     })
   }

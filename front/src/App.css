@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Mystery+Quest&subset=latin-ext');
+@import url('https://fonts.googleapis.com/css?family=Ovo&display=swap');
 
 body{
   color: white;
@@ -9,6 +10,10 @@ body{
   background-position: top;
   background-repeat: no-repeat;
   background-image: url('/img/background.png');
+  font-family: 'Ovo', ;
+}
+
+h1, h2, h3{
   font-family: 'Mystery Quest';
 }
 
