@@ -5,7 +5,10 @@ import './Wait.css'
 class Wait extends React.Component{
   render(){
     return(
-      <img src="http://localhost/openmoji-svg-color/1F60A.svg" />
+      <div className="text-center">
+        <img className="rotate" src="http://localhost/openmoji-svg-color/23F3.svg" alt='' />
+        <p>...Please Wait...</p>
+      </div>
     )
   }
 }

@@ -9,6 +9,7 @@ import Game  from './components/Game'
 
 const processAuth = require('./utils/processAuth')
 
+
 class App extends React.Component{
   constructor(props){
     super(props)

@@ -1,0 +1,16 @@
+.rotate{
+  margin-top:  60px;
+  margin-left: 60px;
+  width:  20%;
+  height: 20%;
+  animation: rotation 2s infinite linear;
+}
+
+@keyframes rotation{
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
