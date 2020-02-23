@@ -1,21 +1,26 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-import '../utils/chatter'
+//import '../utils/chatter'
 
-import Wait from './Wait'
+import Wait  from './Wait'
+import Lobby from './Lobby'
 
 class Game extends React.Component{
   constructor(props){
     super(props)
     this.state = {
-      gameOn: false
+      status: Lobby
     }
+    this.playerStart = this.playerStart.bind(this)
+  }
+  playerStart(){
+    this.setState({status: Wait})
   }
   render(){
     return(
       <div>
-        {this.state.gameOn ? <h2>play</h2> : <Wait/>}
+        {React.createElement(this.state.status, {playerStart: this.playerStart})}
       </div>
     )
   }

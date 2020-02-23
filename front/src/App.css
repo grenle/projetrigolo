@@ -15,6 +15,10 @@ body{
 h1{
   padding-top: 10px;
   color: darkblue;
-  text-shadow: white 0px 0px 2px, black 0px 0px 20px;
+  text-shadow: white 0px 0px 2px, #FEFCD7 0px 0px 3px;
   text-align: center;
+}
+
+h2{
+  text-shadow: black 0 0 3px;
 }

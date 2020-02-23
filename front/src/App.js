@@ -9,7 +9,6 @@ import Game  from './components/Game'
 
 const processAuth = require('./utils/processAuth')
 
-
 class App extends React.Component{
   constructor(props){
     super(props)
@@ -35,6 +34,10 @@ class App extends React.Component{
         {this.state.success ? <Game/> : <Getin serverauth={this.serverauth}/>}
       </div>
     )
+  }
+  componentDidMount(){
+    const audio = new Audio('snd/coin.wav')
+    audio.play()
   }
 }
 
