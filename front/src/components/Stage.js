@@ -11,13 +11,23 @@ class Stage extends React.Component{
   render(){
     const hangojiIndex = this.props.fails
     const hangoji      = this.hangojis[hangojiIndex]
-    console.log(hangoji)  
+    console.log(hangoji)
+    const alphabet = [...new Array(26)].map( (_, i) => String.fromCodePoint(i+97) )
     return(
       <div className="text-center">
         <img src={`http://localhost/openmoji-svg-color/${hangoji}.svg`} alt='' />
         <p>
           {this.props.revealed.map( (x, i) => {
             return <span key={i}>{x}</span>
+          })}
+        </p>
+        <p>
+          {alphabet.map( (letter, i) => {
+            if(this.props.letters.includes(letter)){
+              return <span className="keyon"  key={i}>{letter}</span>
+            }else{
+              return <span className="keyoff" key={i}>{letter}</span>
+            }
           })}
         </p>
       </div>

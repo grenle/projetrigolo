@@ -43,7 +43,9 @@ class Game extends React.Component{
   }
 
   render(){
-    const { revealed, alphabet, fails } = this.state
+    let { revealed, letters } = this.state
+    if(!letters){ letters = [] }
+    let fails = this.state.fails > 7 ? 7 : this.state.fails
     return(
       <div>
         {React.createElement(
@@ -52,7 +54,7 @@ class Game extends React.Component{
             playerStart: this.playerStart,
             roomRequest: this.roomRequest,
             revealed,
-            alphabet,
+            letters,
             fails
           }
         )}
@@ -87,13 +89,15 @@ class Game extends React.Component{
           })
         }
         if(m.type === 'gameupdate'){
-          console.log(`receive < gameUpdate ${Object.keys(m)}`)
           console.log(m.gamestate)
           console.log(`                     ${m.gamestate.revealed}`)
           console.log(`                     ${m.gamestate.letters}`)
           console.log(`                     ${m.gamestate.fails}`)
           console.log(`receive message ${m}`)
           this.setState(m.gamestate)
+          if(m.gamestate.fails > 6){
+            socket.emit('reshuffle', this.state.room)
+          }
         }
       })
 

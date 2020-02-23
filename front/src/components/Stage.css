@@ -5,6 +5,16 @@ img{
 }
 
 p{
-  font-size: 30px;
+  font-size: 40px;
   letter-spacing: 0.2em;
+}
+
+.keyon{
+  color: lightblue;
+  text-shadow: white 0 0 2px;
+}
+
+.keyoff{
+  color: lightblue;
+  opacity: 0.2;
 }

@@ -9,9 +9,13 @@ const {User, Rooms} = require('socket.io-rooms')
 const alphabet = require('../utils/alphabet')
 const revealedInit = require('./revealedInit')
 
+const getword = require('../utils/getword')
+
 function removeFromArray(xs, o){
   const i = xs.indexOf(o)
-  xs.splice(i, 1)
+  if(i !== -1){
+    xs.splice(i, 1)
+  }
 }
 
 function gameOn(u, r, match){
@@ -25,8 +29,8 @@ class Match{
   constructor(){
     this.fails    = 0
     this.players  = {}
-    this.word     = 'hms victory'.split('')
-    this.revealed = revealedInit(this.word)
+    this.word     = null
+    this.revealed = null
     this.letters  = alphabet()
   }
 
@@ -39,13 +43,15 @@ class Match{
   }
 
   update(letter){
+    console.log(`REMOVING ${letter} from ${this.letters}`)
     removeFromArray(this.letters, letter)
+    console.log(`REMOVED  ${letter} from ${this.letters}`)
     if(this.word.indexOf(letter) === -1){
       this.fails++
     }else{
       this.word.forEach( ( wordLetter, i ) => {
         if(wordLetter.toUpperCase() === letter.toUpperCase()){
-          this.revealed[i] = letter          
+          this.revealed[i] = letter
         }
       })
     }
@@ -62,9 +68,20 @@ module.exports = (io) => {
     const user = new User()
     client.emit('user', user)
 
+    client.on('reshuffle', roomId => {
+      getword().then( x => {
+        matches[0].word = x.word.toLowerCase().split('')
+        matches[0].revealed = revealedInit(x.word.split(''))
+        matches[0].letters = alphabet()
+        matches[0].fails = 0
+        setTimeout(gameOn, 1000, user, Rooms, matches[0])
+        console.log('matches', matches[0])
+      })
+    })
+
     client.on('roomRequest', (gamer) => {
       console.log('receive < roomRequest')
-      const roomId = 0
+      const roomId = 0 // need dispatch
       Object.assign(matches[roomId].players, gamer)
       console.log('players', matches[roomId].players)
       console.log(`send    > roomResponse/${roomId}`)
@@ -72,7 +89,15 @@ module.exports = (io) => {
       console.log(`user ${user} joining room ${roomId}`)
       console.log(user)
       Rooms.join(roomId, user, io, client)
-      setTimeout(gameOn, 1000, user, Rooms, matches[roomId])
+      if(matches[roomId].word){
+        setTimeout(gameOn, 1000, user, Rooms, matches[roomId])
+      }else{
+        getword().then( x => {
+          matches[roomId].word = x.word.toLowerCase().split('')
+          matches[roomId].revealed = revealedInit(x.word.split(''))
+          setTimeout(gameOn, 1000, user, Rooms, matches[roomId])
+        })
+      }
     })
 
     client.on('letter', letter => {
