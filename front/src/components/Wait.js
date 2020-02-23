@@ -11,6 +11,10 @@ class Wait extends React.Component{
       </div>
     )
   }
+
+  componentDidMount(){
+    this.props.roomRequest()
+  }
 }
 
 export default Wait
