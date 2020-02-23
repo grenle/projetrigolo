@@ -32,7 +32,7 @@ class Game extends React.Component{
   roomRequest = () => {
     const gamer = ( ({_id, handle}) => ({_id, handle}) )(this.props.gamer)
     console.log(`emit    > roomRequest ${gamer}`)
-    this.state.socket.emit('roomRequest', gamer)
+    this.state.socket.emit('roomRequest', gamer, this.state.user)
   }
 
   joinroom = num => {
@@ -60,10 +60,16 @@ class Game extends React.Component{
 
   componentDidMount(){
 
-    const {socket } = this.state
+    const {socket} = this.state
 
     socket.on('connect', () => {
       console.log('receive < connect')
+      socket.on('user', u => {
+        console.log(`receive < user ${u}`)
+        this.setState({user: u})
+        console.log(this.state)
+      })
+
       socket.on('roomResponse', roomId => {
         console.log(`receive < roomResponse/${roomId}`)
         this.joinroom(roomId)
@@ -72,20 +78,21 @@ class Game extends React.Component{
       socket.on('gameOn', () => {
         console.log(`receive < gameOn`)
         this.setState({ status: Stage })
+        document.addEventListener('keypress', e => {
+          console.log(`emit    < letter ${e.key}`)
+          socket.emit('letter', e.key)
+        })  
       })
 
-      socket.on('gameUpdate', things => {
-        console.log(`receive < gameUpdate ${things}`)
-        console.log(`                     ${things.revealed}`)
-        console.log(`                     ${things.letters}`)
-        console.log(`                     ${things.fails}`)
-        this.setState(things)
+      socket.on('message', m => {
+        console.log(`receive < gameUpdate ${m}`)
+        console.log(`                     ${m.revealed}`)
+        console.log(`                     ${m.letters}`)
+        console.log(`                     ${m.fails}`)
+        console.log(`receive message ${m}`)
+        this.setState(m)
       })
 
-      document.addEventListener('keypress', e => {
-        console.log(`emit    < letter ${e.key}`)
-        socket.emit('letter', e.key)
-      })
     })
   }
 }

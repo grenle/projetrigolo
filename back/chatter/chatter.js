@@ -16,7 +16,7 @@ function removeFromArray(xs, o){
 
 function gameOn(client){
   client.emit('gameOn')
-  client.emit('gameUpdate', matches[0])
+  client.emit('message', matches[0])
 }
 
 class Match{
@@ -57,14 +57,19 @@ module.exports = (io) => {
 
   io.on('connection', client => {
     console.log(`receive < user connection ${client.id}`)
+    const user = new User()
+    client.emit('user', user)
 
     client.on('roomRequest', (gamer) => {
       console.log('receive < roomRequest')
       const roomId = 0
       Object.assign(matches[roomId].players, gamer)
-      console.log(matches[roomId].players)
+      console.log('players', matches[roomId].players)
       console.log(`send    > roomResponse/${roomId}`)
       client.emit('roomResponse', roomId)
+      console.log(`user ${user} joining room ${roomId}`)
+      console.log(user)
+      Rooms.join(roomId, user, io, client)
       setTimeout(gameOn, 1000, client)
     })
 
@@ -73,7 +78,10 @@ module.exports = (io) => {
       matches[0].update(letter)
       const status = matches[0].gameStatus()
       if(status === 'on'){
-        client.emit('gameUpdate', matches[0])
+        console.log(`emiting game update`)
+        // client.emit('gameUpdate', matches[0])
+        matches[0].uid = user.uid
+        Rooms.send(0, matches[0])
       }else{
         client.emit('gameEnd', matches[0], status)
       }
