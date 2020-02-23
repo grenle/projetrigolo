@@ -14,9 +14,11 @@ function removeFromArray(xs, o){
   xs.splice(i, 1)
 }
 
-function gameOn(client){
-  client.emit('gameOn')
-  client.emit('message', matches[0])
+function gameOn(u, r, match){
+  matches[0].uid = u.uid // is this necessary?
+  const m = {type: 'gameupdate', gamestate: match}
+  r.send(0, {type: 'gameon'})
+  r.send(0, m)
 }
 
 class Match{
@@ -70,7 +72,7 @@ module.exports = (io) => {
       console.log(`user ${user} joining room ${roomId}`)
       console.log(user)
       Rooms.join(roomId, user, io, client)
-      setTimeout(gameOn, 1000, client)
+      setTimeout(gameOn, 1000, user, Rooms, matches[roomId])
     })
 
     client.on('letter', letter => {
@@ -80,11 +82,19 @@ module.exports = (io) => {
       if(status === 'on'){
         console.log(`emiting game update`)
         // client.emit('gameUpdate', matches[0])
-        matches[0].uid = user.uid
-        Rooms.send(0, matches[0])
+        matches[0].uid = user.uid // is this necessary?
+        const m = {type: 'gameupdate', gamestate: matches[0]}
+        Rooms.send(0, m)
       }else{
-        client.emit('gameEnd', matches[0], status)
+        matches[0].uid = user.uid // is this necessary?
+        const m = {type: 'gameupdate', gamestate: matches[0]}
+        Rooms.send(0, m)
       }
+    })
+
+    client.on('disconnect', () => {
+      console.log(`user ${user} disconnect`)
+      Rooms.leave(user)
     })
 
   })

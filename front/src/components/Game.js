@@ -21,6 +21,7 @@ class Game extends React.Component{
       client   : undefined,
       revealed : [],
       letters  : [],
+      fails    : 0
     }
     this.playerStart = this.playerStart.bind(this)
   }
@@ -42,7 +43,7 @@ class Game extends React.Component{
   }
 
   render(){
-    const { revealed, alphabet } = this.state
+    const { revealed, alphabet, fails } = this.state
     return(
       <div>
         {React.createElement(
@@ -51,7 +52,8 @@ class Game extends React.Component{
             playerStart: this.playerStart,
             roomRequest: this.roomRequest,
             revealed,
-            alphabet
+            alphabet,
+            fails
           }
         )}
       </div>
@@ -75,22 +77,24 @@ class Game extends React.Component{
         this.joinroom(roomId)
       })
 
-      socket.on('gameOn', () => {
-        console.log(`receive < gameOn`)
-        this.setState({ status: Stage })
-        document.addEventListener('keypress', e => {
-          console.log(`emit    < letter ${e.key}`)
-          socket.emit('letter', e.key)
-        })  
-      })
-
       socket.on('message', m => {
-        console.log(`receive < gameUpdate ${m}`)
-        console.log(`                     ${m.revealed}`)
-        console.log(`                     ${m.letters}`)
-        console.log(`                     ${m.fails}`)
-        console.log(`receive message ${m}`)
-        this.setState(m)
+        if(m.type === 'gameon'){
+          console.log(`receive < gameOn`)
+          this.setState({ status: Stage })
+          document.addEventListener('keypress', e => {
+            console.log(`emit    < letter ${e.key}`)
+            socket.emit('letter', e.key)
+          })
+        }
+        if(m.type === 'gameupdate'){
+          console.log(`receive < gameUpdate ${Object.keys(m)}`)
+          console.log(m.gamestate)
+          console.log(`                     ${m.gamestate.revealed}`)
+          console.log(`                     ${m.gamestate.letters}`)
+          console.log(`                     ${m.gamestate.fails}`)
+          console.log(`receive message ${m}`)
+          this.setState(m.gamestate)
+        }
       })
 
     })
